@@ -51,6 +51,7 @@ public class SortApp {
 		arrOrder = cmd.getOptionValue("order");
 		
 		String sizeS = cmd.getOptionValue("size");
+		sizeS = sizeS.strip();
 		size = Integer.valueOf(sizeS);
 		
 		if (size < 0) {
@@ -147,8 +148,8 @@ public class SortApp {
 		// sort array
 		long statTime = System.nanoTime();
 		sort();
-		long timeElapsed = System.nanoTime() - statTime;
-		System.out.println("It took " + timeElapsed / 1.0E9 + " seconds to sort the array.");
+		runTime = System.nanoTime() - statTime;
+		System.out.println(String.format("%1$s: %3$d seconds to sort %2$s array of integers.", algo, arrOrder, (int)(runTime / 1.0E9 )));
 
 				
 		// Write array to file
@@ -191,8 +192,9 @@ public class SortApp {
 	 * precondition: filename exists and array has been sorted
 	 * saves sorted array to text file one value per line
 	 */
-	private static void saveResultsToFile(int[] arr, String outputfile) throws IOException {
+	private void saveResultsToFile(int[] arr, String outputfile) throws IOException {
 		FileWriter writer = new FileWriter(outputfile);
+		writer.write("Run time: " +  (runTime / 1.0E9) + " seconds\n");
 		for (int i = 0; i < arr.length; i++) {
 			writer.write(arr[i] + "\n");
 		}
@@ -387,11 +389,23 @@ public class SortApp {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		
-		var app = new SortApp(args);
-		
-		app.run();
-		
+		SortApp app = null;
+		args = new String[4];
+		String sizes[] = {"100", "100000", "1000000"};
+		String algorithms[] = { "bubble", "quick", "insertion", "merge" };
+		String orders[] = { "descending", "random", "ascending" };
+		for (String algorithm : algorithms) {
+			for (String order : orders) {
+				for (var size: sizes) {
+					args[0] = String.format("-s%s ", size);	
+					args[1] = String.format("-o%s", order);
+					args[2] = String.format("-a%s", algorithm);
+					args[3] = String.format("-f%s ", String.format("%s-%s-%s.txt", algorithm, order, size));
+					app = new SortApp(args);
+					app.run();					
+				}
+			}
+		}
 	}
 
 }
