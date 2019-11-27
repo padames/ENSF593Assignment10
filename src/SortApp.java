@@ -149,7 +149,7 @@ public class SortApp {
 		long statTime = System.nanoTime();
 		sort();
 		runTime = System.nanoTime() - statTime;
-		System.out.println(String.format("%1$s: %3$d seconds to sort %2$s array of integers.", algo, arrOrder, (int)(runTime / 1.0E9 )));
+		System.out.println(String.format("%1$s: %3$d miliseconds to sort %2$s array of %4$d integers.", algo, arrOrder, (int)(runTime / 1.0E6 ), size));
 
 				
 		// Write array to file
@@ -193,12 +193,12 @@ public class SortApp {
 	 * saves sorted array to text file one value per line
 	 */
 	private void saveResultsToFile(int[] arr, String outputfile) throws IOException {
-		FileWriter writer = new FileWriter(outputfile);
-		writer.write("Run time: " +  (runTime / 1.0E9) + " seconds\n");
-		for (int i = 0; i < arr.length; i++) {
-			writer.write(arr[i] + "\n");
-		}
-		writer.close();
+//		FileWriter writer = new FileWriter(outputfile);
+//		writer.write("Run time: " +  (runTime / 1.0E9) + " seconds\n");
+//		for (int i = 0; i < arr.length; i++) {
+//			writer.write(arr[i] + "\n");
+//		}
+//		writer.close();
 
 	}
 
