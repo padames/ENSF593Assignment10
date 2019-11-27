@@ -8,12 +8,13 @@ import org.apache.commons.cli.*;
 public class SortApp {
 
 	private Options options = new Options();
-	private CommandLine cmd;
-	private String arrOrder;
-	private String algo;
-	private String outputFilename;
-	private int size;
-	private int [] arr;
+	CommandLine cmd;
+	String arrOrder;
+	String algo;
+	String outputFilename;
+	int size;
+	int [] arr;
+	long runTime;
 	
 	/**
 	 * Entry point for app. Parses the arguments and creates the necessary data to run.
@@ -52,6 +53,15 @@ public class SortApp {
 		String sizeS = cmd.getOptionValue("size");
 		size = Integer.valueOf(sizeS);
 		
+		if (size < 0) {
+			System.err.println("Size should be greater than zero, exiting");
+			System.exit(1);
+		}
+		if (size > Integer.MAX_VALUE) {
+			System.err.println(String.format("Size exceeded max allowed: %d, exiting", Integer.MAX_VALUE));
+			System.exit(1);			
+		}
+		
 		algo = cmd.getOptionValue("algorithm");
 		
 		outputFilename = cmd.getOptionValue("filename");
@@ -80,25 +90,35 @@ public class SortApp {
         }
 	}
 
-	private int[] createArray() {
-		arr = new int[size];
-		switch (arrOrder) {
+
+	/**
+	 * Use available infor from having parsed command line to 
+	 * create an array for testing
+	 */
+	private void createArray() {
+		arr =  new int[size];
+		
+		switch(arrOrder.toLowerCase()) {
 		case ("ascending"):
-			for (int i = 0; i < arr.length; i++)
-				arr[i] = i; // storing random integers in an array
+			for (int i = 0; i < arr.length; i++) {
+				arr[i] = i;
+			}
 			break;
 		case ("descending"):
-			for (int i = 0; i < arr.length; i++)
-				arr[i] = arr.length - i;
+			for (int i = arr.length -1; i > 0; i--) {
+				arr[i] = i;
+			}
 			break;
 		case ("random"):
 			Random random = new Random();
-			for (int i = 0; i < arr.length; i++)
-				arr[i] = random.nextInt(); // storing random integers in an array
+			for (int i = 0; i < arr.length; i++) {
+				arr[i] = random.nextInt(); 
+			}
 			break;
+		default:
+			System.err.println("Unknown algorithm, exiting now");
+			System.exit(1);
 		}
-
-		return arr;
 	}
 
 	
@@ -117,7 +137,7 @@ public class SortApp {
 	private void run() {
 	
 		if (cmd == null) {
-			System.err.println("Something went wrong, no commanline arguments were parsed.");
+			System.err.println("Something went wrong, no commandline arguments were parsed.");
 			System.exit(1);
 		}
 
@@ -146,6 +166,7 @@ public class SortApp {
 	 */
 	private void sort() {
 		
+		long startTime = System.nanoTime();
 		switch (algo) {
 		case ("bubble"):
 			SortApp.bubbleSort(arr);
@@ -160,7 +181,10 @@ public class SortApp {
 		case("quick"):
 			SortApp.quickSort(arr);
 			break;
-		}		
+		}
+		long endTime = System.nanoTime();
+		
+		runTime = endTime-startTime;
 	}
 
 	/**
@@ -176,6 +200,13 @@ public class SortApp {
 
 	}
 
+	@Override
+	public String toString() {
+		String s="";
+		s+= String.format("%s, size: %d, time (s): %10d", algo, size, runTime);
+		return s;
+	}
+	
 	/**
 	 * 
 	 * @param arr
