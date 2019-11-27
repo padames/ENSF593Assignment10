@@ -1,15 +1,19 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Random;
+
 import org.apache.commons.cli.*;
 
 
 public class SortApp {
 
 	private Options options = new Options();
-	CommandLine cmd;
-	String arrOrder;
-	String algo;
-	String outputFilename;
-	int size;
-	int [] arr;
+	private CommandLine cmd;
+	private String arrOrder;
+	private String algo;
+	private String outputFilename;
+	private int size;
+	private int [] arr;
 	
 	/**
 	 * Entry point for app. Parses the arguments and creates the necessary data to run.
@@ -76,19 +80,27 @@ public class SortApp {
         }
 	}
 
-	private void createArray() {
-		switch(arrOrder) {
+	private int[] createArray() {
+		arr = new int[size];
+		switch (arrOrder) {
 		case ("ascending"):
-			
+			for (int i = 0; i < arr.length; i++)
+				arr[i] = i; // storing random integers in an array
 			break;
 		case ("descending"):
-			
+			for (int i = 0; i < arr.length; i++)
+				arr[i] = arr.length - i;
 			break;
 		case ("random"):
-			
+			Random random = new Random();
+			for (int i = 0; i < arr.length; i++)
+				arr[i] = random.nextInt(); // storing random integers in an array
 			break;
 		}
+
+		return arr;
 	}
+
 	
 	private Option addRequiredOption(String shortArg, String longArg,
 			String description) {
@@ -109,11 +121,24 @@ public class SortApp {
 			System.exit(1);
 		}
 
+		// create array
 		createArray();
 		
+		// sort array
+		long statTime = System.nanoTime();
 		sort();
+		long timeElapsed = System.nanoTime() - statTime;
+		System.out.println("It took " + timeElapsed / 1.0E9 + " seconds to sort the array.");
 
-		saveResultsToFile();
+				
+		// Write array to file
+		try {
+			saveResultsToFile(arr, outputFilename);
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+			System.exit(6);
+		}
+
 	}
 	
 	/**
@@ -129,7 +154,7 @@ public class SortApp {
 			SortApp.insertionSort(arr);
 			break;
 		case ("merge"):
-			SortApp.mergeSort(arr, arr[0], arr[size-1]);
+			SortApp.mergeSort(arr, 0, size-1);
 			break;
 		
 		case("quick"):
@@ -142,9 +167,13 @@ public class SortApp {
 	 * precondition: filename exists and array has been sorted
 	 * saves sorted array to text file one value per line
 	 */
-	private void saveResultsToFile() {
-		// TODO grab the sorted array and save it to file
-		
+	private static void saveResultsToFile(int[] arr, String outputfile) throws IOException {
+		FileWriter writer = new FileWriter(outputfile);
+		for (int i = 0; i < arr.length; i++) {
+			writer.write(arr[i] + "\n");
+		}
+		writer.close();
+
 	}
 
 	/**
