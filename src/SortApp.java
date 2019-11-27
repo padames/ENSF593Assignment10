@@ -151,8 +151,19 @@ public class SortApp {
 	 * 
 	 * @param arr
 	 */
-	public static void bubbleSort(int[] arr) {
-		
+	public static void bubbleSort(int[] arr) {		
+		for (int i = 0; i < arr.length - 1; i++) {
+			boolean swapped = false;
+
+			for (int j = arr.length - 1; j > i; j--)
+				if (arr[j] < arr[j - 1]) { // Compare items
+					swap(arr, j, j - 1);
+					swapped = true;
+				}
+			if (!swapped) {
+				return;
+			}
+		}
 	}
 
 	/**
@@ -160,9 +171,63 @@ public class SortApp {
 	 * @param arr
 	 */
 	public static void quickSort(int[] arr) {
-		
+		if (arr.length < 2)
+			return;
+
+		int max = 0;
+		// find the largest element and put it at the end of data
+		for (int i = 0; i < arr.length; i++)
+			if (arr[max] < arr[i])
+				max = i;
+
+		swap(arr, arr.length - 1, max); // largest element is now in its final position
+		quickSort(arr, 0, arr.length - 2);			
 	}
 
+	/**
+	 * 
+	 * @param arr
+	 * @param first
+	 * @param last
+	 */
+	private static void quickSort(int[] arr, int first, int last) {
+		int lower = first + 1, upper = last;
+		swap(arr, first, (first + last) / 2);
+		int bound = arr[first];
+		while (lower <= upper) {
+			while (bound > arr[lower]) {
+				lower++;
+			}
+
+			while (bound < arr[upper]) {
+				upper--;
+			}
+
+			if (lower < upper)
+				swap(arr, lower++, upper--);
+			else
+				lower++;
+		}
+
+		swap(arr, upper, first);
+
+		if (first < upper - 1)
+			quickSort(arr, first, upper - 1);
+		if (upper + 1 < last)
+			quickSort(arr, upper + 1, last);					
+	}
+	
+	/**
+	 * 
+	 * @param arr
+	 * @param i
+	 * @param j
+	 */
+	private static void swap(int arr[], int i, int j) {
+		int temp = arr[i]; // Create a temporary integer to store value 1
+		arr[i] = arr[j]; // Swap value 1 to value 2
+		arr[j] = temp; // Swap value 2 to value 1
+	}
 	
 	/**
 	 * Based on the course implementation worked during class.
