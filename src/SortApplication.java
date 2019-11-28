@@ -2,8 +2,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
+/**
+ * Class to run the command line program through main
+ *
+ */
 public class SortApplication {
 
+	/**
+	 * Main entry point to run program from command line.
+	 * Expects command line arguments as explained by print usage function.
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		// check number of arguments
@@ -13,45 +22,39 @@ public class SortApplication {
 		}
 
 		// parse arguments
-//		String order = parseOrder(args[0]);
-//		int size = parseSize(args[1]);
-//		String algorithm = parseAlgorithm(args[2]);
-//		String outputfile = parseOutputfile(args[3]);
+		String order = parseOrder(args[0]);
+		int size = parseSize(args[1]);
+		String algorithm = parseAlgorithm(args[2]);
+		String outputfile = parseOutputfile(args[3]);
 
-		String algorithms[] = { "bubble", "quick", "insertion", "merge" };
-		String orders[] = { "descending", "random", "ascending" };
-		for (String algorithm : algorithms) {
-			for (String order : orders) {
-				for (int size = 1; size <= 1000000; size *= 10) {
 
-					// Create array
-					int arr[] = CreateArray(size, order);
+		// Create array
+		int arr[] = CreateArray(size, order);
 
-					// Sort array
-					long statTime = System.nanoTime();
-					SortArray(arr, algorithm);
-					long timeElapsed = System.nanoTime() - statTime;
+		// Sort array
+		long statTime = System.nanoTime();
+		SortArray(arr, algorithm);
+		long timeElapsed = System.nanoTime() - statTime;
 
-//					// present results
-//					System.out.println("It took " + algorithm + " method " + timeElapsed / 1.0E9 + " seconds to sort "
-//							+ size + " elements array filled in " + order + " order.");
+		System.out.println(algorithm + " " + order + " " + size + ": " + (timeElapsed / 1.0E9) + " sec");
 
-					System.out.println(algorithm + " " + order + " " + size + ": " + (timeElapsed / 1.0E9));
-
-					String outputfile = algorithm + "_" + order + "_" + size + ".txt";
-					// Write array to file
-					try {
-						saveResultsToFile(arr, outputfile);
-					} catch (IOException e) {
-						System.err.println(e.getMessage());
-						System.exit(6);
-					}
-				}
-			}
+		// Write array to file
+		try {
+			saveResultsToFile(arr, outputfile);
+		} 
+		catch (IOException e) {
+			System.err.println(e.getMessage());
+			System.exit(6);
 		}
 
 	}
 
+	/**
+	 * save all results to a file for permanent record of results.
+	 * @param arr
+	 * @param outputfile
+	 * @throws IOException
+	 */
 	private static void saveResultsToFile(int[] arr, String outputfile) throws IOException {
 		FileWriter writer = new FileWriter(outputfile);
 		for (int i = 0; i < arr.length; i++) {
@@ -187,15 +190,5 @@ public class SortApplication {
 		System.out.println("Arguments missing!!");
 		System.out.println("Usage: <order> <size> <algorithm> <outputfile>");
 
-	}
-
-	/**
-	 * Prints array to console
-	 * 
-	 * @param arr an array of integers
-	 */
-	private static void printArray(int arr[]) {
-		for (int val : arr)
-			System.out.println(val);
 	}
 }
