@@ -115,9 +115,13 @@ public class AnagramList {
 	}
 
 	/**
-	 * Inserts a  Node object in order of character.
-	 * It avoids inserting it if it already exists.
-	 *  
+	 * Inserts a new given Node object in alphabetical order.
+	 * It inserts duplicates. This happens between 
+	 * inner nodes (nodes between the head and the tail)
+	 * because it inquires if the current node
+	 * is less than the new node and if it is equal to or greater than 
+	 * the next node, before inserting.
+	 * 
 	 * @param newNode the Node's object to be inserted
 	 */
 	void InsertInOrder(Node newNode) {
@@ -145,7 +149,7 @@ public class AnagramList {
 			 if (current.getNext() != null) {
 				 // current node is not the tail
 				 if (current.isLessThan(newNode) 
-						 && current.getNext().isGreatherThan(newNode)) {
+						 && current.getNext().isEqualOrGreatherThan(newNode)) {
 					 // insert between current and next
 					 Node temp = current.getNext();
 					 current.setNext(newNode);

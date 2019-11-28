@@ -41,16 +41,16 @@ public class Node {
 	}
 
 	/**
-	 * Compares if the pay load of this node is greater than that of the
+	 * Compares if the pay load of this node is greater than or equal to that of the
 	 * other node. It bases the comparison on a case-sensitive java <code>String</code> method.
 	 * 
 	 * @param otherNode the node to compare to
 	 * @return true if this node's pay load is syntactically greater than the other's, false otherwise
 	 */
-	public boolean isGreatherThan(Node otherNode) {
+	public boolean isEqualOrGreatherThan(Node otherNode) {
 		if (otherNode == null)
 			return false;
-		return getWord().compareTo(otherNode.getWord()) > 0;
+		return getWord().compareTo(otherNode.getWord()) >= 0;
 	}	
 	
 	/**
