@@ -104,7 +104,7 @@ public class SortApplication {
 			break;
 		case ("descending"):
 			for (int i = 0; i < arr.length; i++)
-				arr[i] = arr.length - i;
+				arr[i] = arr.length - i - 1;
 			break;
 		case ("random"):
 			Random random = new Random();
