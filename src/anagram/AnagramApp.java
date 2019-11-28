@@ -1,3 +1,5 @@
+package anagram;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -7,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-public class WordLinkedListApp {
+public class AnagramApp {
 
 	public static void main(String[] args) {
 
@@ -21,7 +23,7 @@ public class WordLinkedListApp {
 //		String inputfile = args[0];
 //		String outputfile = args[1];
 //		
-//		WordLinkedList arrayOfWordsLinkedList[] = null;
+//		AnagramList arrayOfWordsLinkedList[] = null;
 //		
 //		long statTime = System.nanoTime();		
 //		// read string from file
@@ -58,7 +60,7 @@ public class WordLinkedListApp {
 		
 		// TODO: print time to screen
 		
-		WordLinkedList arrayOfWordsLinkedList[] = null;
+		AnagramList arrayOfWordsLinkedList[] = null;
 		
 	    String words[] = {"car",
 	    		"dog",
@@ -70,10 +72,10 @@ public class WordLinkedListApp {
 	    		"tops"};
 	    
 	    for(String word : words) {
-	    	arrayOfWordsLinkedList = addWord(arrayOfWordsLinkedList, word);
+	    	arrayOfWordsLinkedList = insert(arrayOfWordsLinkedList, word);
 	    }
 	    
-	    for(WordLinkedList list : arrayOfWordsLinkedList) {
+	    for(AnagramList list : arrayOfWordsLinkedList) {
 	    	list.printListInOneLine();
 	    }
 	    
@@ -107,47 +109,53 @@ public class WordLinkedListApp {
     } 
     
     
-    public static WordLinkedList[] addWord(WordLinkedList[] theList, String word) {
+    
+    /**
+     * inserts a new node to the anagram list in alphabetical order
+     * @param aList
+     * @param word
+     * @return
+     */
+    public static AnagramList[] insert(AnagramList[] aList, String word) {
     	
-    	Word theWord = new Word(word);
+    	Node newNode = new Node(word);
     	
-    	if (theList == null) {
-    		theList = new WordLinkedList[1];
-    		theList[0] = new WordLinkedList(); 
-    		theList[0].InsertInOrder(theWord); 
-    		return theList;
+    	if (aList == null) {
+    		aList = new AnagramList[1];
+    		aList[0] = new AnagramList(); 
+    		aList[0].InsertInOrder(newNode); 
+    		return aList;
     	}
     	
     	// check for anagrams
     	boolean wordAdded =false;
-    	for(int i=0;  i < theList.length; i++) {
-    		String str = theList[i].getHead().getWord();
+    	for(int i=0;  i < aList.length; i++) {
+    		String str = aList[i].getHead().getWord();
     		if (isAnagram(str, word)) {
-    			theList[i].InsertInOrder(theWord);
+    			aList[i].InsertInOrder(newNode);
     			wordAdded = true;
     			break;
     		}
     	}
     	
     	if (wordAdded)
-    		return theList;
+    		return aList;
     	
     	// resize array
-    	WordLinkedList[] newList = new WordLinkedList[theList.length + 1];
-    	for(int i=0;  i < theList.length; i++) {
-    		newList[i] = theList[i];
+    	AnagramList[] newList = new AnagramList[aList.length + 1];
+    	for(int i=0;  i < aList.length; i++) {
+    		newList[i] = aList[i];
     	}
     	
-    	newList[newList.length-1] = new WordLinkedList();
-    	newList[newList.length-1].InsertInOrder(theWord);
+    	newList[newList.length-1] = new AnagramList();
+    	newList[newList.length-1].InsertInOrder(newNode);
     	return newList;
-    	
-    	
     }
     
     
     /**
-	 * Prints usage
+	 * Prints informative message about how to use the program 
+	 * from command line
 	 */
 	private static void printUsage() {
 
@@ -157,17 +165,19 @@ public class WordLinkedListApp {
 	}
     
     
-    //***********************************************************
-    /**
-	 * 
-	 * @param arr
+
+	/**
+	 * Implementation of quick sort for an array of anagram lists.
+	 * <p>
+	 * <b>Note: </b> this is the public method called by users
+	 * @param arr a java <code>array</code> of anagram lists
 	 */
-	public static void quickSort(WordLinkedList[] arr) {
+	public static void quickSort(AnagramList[] arr) {
 		if (arr.length < 2)
 			return;
 		
 		int max = 0;
-		// find the largest element and put it at the end of data
+		// find the largest element and put it at the end of the array
 		for (int i = 0; i < arr.length; i++)
 			if (arr[max].getHead().getWord().compareTo(arr[i].getHead().getWord()) < 0)
 				max = i;
@@ -177,12 +187,14 @@ public class WordLinkedListApp {
 	}
 
 	/**
+	 * Private method that implements the quick sort algoritm over an array list
+	 * of anagram lists.
 	 * 
-	 * @param arr
-	 * @param first
-	 * @param last
+	 * @param arr the array of lists
+	 * @param first the index where the array data starts
+	 * @param last the index where the array data ends
 	 */
-	private static void quickSort(WordLinkedList[] arr, int first, int last) {
+	private static void quickSort(AnagramList[] arr, int first, int last) {
 		int lower = first + 1, upper = last;
 		swap(arr, first, (first + last) / 2);
 		String bound = arr[first].getHead().getWord();
@@ -209,20 +221,17 @@ public class WordLinkedListApp {
 			quickSort(arr, upper + 1, last);
 	}
 
+	
 	/**
-	 * 
-	 * @param arr
-	 * @param i
-	 * @param j
+	 * Interchanges i place the values stored in the array at arra indexes left and right
+	 * @param arr the java array of anagram lists
+	 * @param left index into the array
+	 * @param right index into the array
 	 */
-	private static void swap(WordLinkedList arr[], int i, int j) {
-		WordLinkedList temp = arr[i]; // Create a temporary integer to store value 1
-		arr[i] = arr[j]; // Swap value 1 to value 2
-		arr[j] = temp; // Swap value 2 to value 1
+	private static void swap(AnagramList arr[], int left, int right) {
+		AnagramList temp = arr[left]; // original left value is set aside 
+		arr[left] = arr[right]; // new left value becomes old right
+		arr[right] = temp; // new right value becomes old left
 	}
-	
-	
-	
-    
 
 }

@@ -1,24 +1,25 @@
+package anagram;
 
-public class WordLinkedList {
-
-	/**
-	 * The head of the Word Object Linked List
-	 */
-	private Word head;
+public class AnagramList {
 
 	/**
-	 * Constructs a WordLinkedList Object
+	 * The head of the Node Object Linked List
 	 */
-	public WordLinkedList() {
+	private Node head;
+
+	/**
+	 * Constructs a AnagramList Object
+	 */
+	public AnagramList() {
 		head = null;
 	}
 
 	/**
-	 * Inserts a Word object to the end of the Linked List
+	 * Inserts a Node object to the end of the Linked List
 	 * 
-	 * @param s the Word's object to be inserted
+	 * @param s the Node's object to be inserted
 	 */
-	public void insertToEndOfList(Word s) {
+	public void insertToEndOfList(Node s) {
 
 		if (head == null) {
 			head = s;
@@ -29,11 +30,11 @@ public class WordLinkedList {
 	}
 
 	/**
-	 * Inserts a  Word object to the front of the Linked List
+	 * Inserts a  Node object to the front of the Linked List
 	 * 
-	 * @param s the  Word's object to be inserted
+	 * @param s the  Node's object to be inserted
 	 */
-	public void insertToFrontOfList(Word s) {
+	public void insertToFrontOfList(Node s) {
 		if (head == null) {
 			head = s;
 		} else {
@@ -59,7 +60,7 @@ public class WordLinkedList {
 	 * 
 	 * @param cursor
 	 */
-	private void recursivePrintList(Word cursor) {
+	private void recursivePrintList(Node cursor) {
 
 		if (cursor != null) {
 
@@ -72,7 +73,7 @@ public class WordLinkedList {
 	 * Prints Linked list (iteratively)
 	 */
 	public void printList() {
-		Word cursor = head;
+		Node cursor = head;
 		while (cursor != null) {
 			System.out.println(cursor);
 			cursor = cursor.getNext();
@@ -83,7 +84,7 @@ public class WordLinkedList {
 	 * Prints Linked list (iteratively)
 	 */
 	public void printListInOneLine() {
-		Word cursor = head;
+		Node cursor = head;
 		while (cursor != null) {
 			System.out.print(cursor + " ");
 			cursor = cursor.getNext();
@@ -92,12 +93,12 @@ public class WordLinkedList {
 	}
 
 	/**
-	 * Gets last node (i.e.  Word object) in the Linked list
+	 * Gets last node (i.e.  Node object) in the Linked list
 	 * 
 	 * @return
 	 */
-	private Word getLastNode() {
-		Word cursor = head;
+	private Node getLastNode() {
+		Node cursor = head;
 		while (cursor.getNext() != null) {
 			cursor = cursor.getNext();
 		}
@@ -105,54 +106,78 @@ public class WordLinkedList {
 	}
 
 	/**
-	 * Gets the head ( i.e.  Word)
+	 * Gets the head ( i.e.  Node)
 	 * 
-	 * @return the  Word object at the head
+	 * @return the  Node object at the head
 	 */
-	public Word getHead() {
+	public Node getHead() {
 		return head;
 	}
 
 	/**
-	 * Inserts a  Word object in order of character. 
-	 * @param p the Word's object to be inserted
+	 * Inserts a  Node object in order of character.
+	 * It avoids inserting it if it already exists.
+	 *  
+	 * @param newNode the Node's object to be inserted
 	 */
-	void InsertInOrder(Word p) {
+	void InsertInOrder(Node newNode) {
+		 if (isEmpty())
+			 head = newNode;
 
-		Word current = head;
-		Word previous = null;
-
-		while (current != null && p.getWord().compareTo(current.getWord()) >= 0) {
-
-			// TODOL do I need to exclude equality
-//			if (p.getId() == current.getId())
-//				return;
-			previous = current;
-			current = current.getNext();
-		}
-
-		// previous is the predecessor node
-		// if previous null, then linked list is empty/
-		// so set head to the new node, otherwise set
-		// previous to point to the new node
-		if (previous == null)
-			head = p;
-		else
-			previous.setNext(p);
-
-		// set the new node to point to current node
-		p.setNext(current);
-
+		 if (head.getNext() == null) {
+			 // single-element list found (head=tail)
+			 if (head.isLessThan(newNode)) {
+				 // new node becomes tail
+				 head.setNext(newNode);
+				 newNode.setNext(null);			 
+			 }
+			 else {
+				 // new node becomes new head
+				 var temp = head;
+				 head = newNode;
+				 newNode.setNext(temp);
+			 }
+		 }
+		 
+		 Node current = head;
+		 
+		 while (current != null) {
+			 if (current.getNext() != null) {
+				 // current node is not the tail
+				 if (current.isLessThan(newNode) 
+						 && current.getNext().isGreatherThan(newNode)) {
+					 // insert between current and next
+					 Node temp = current.getNext();
+					 current.setNext(newNode);
+					 newNode.setNext(temp);
+					 break;
+				 }				 
+			 }
+			 else { //current is the tail
+				 if (current.isLessThan(newNode)) {
+					 // insert before tail
+					 Node temp = current.getNext();
+					 current.setNext(newNode);
+					 newNode.setNext(temp);
+					 break;
+				 }				 
+				 else { // new node becomes new tail
+					 current.setNext(newNode);
+					 newNode.setNext(null);
+				 }
+			 }
+			 current = current.getNext();
+		 }
 	}
-
+	
 	/**
-	 * Returns a Word object if the id matches a  Word in the list
+	 * Returns a Node object if the id matches a  Node in the list
 	 * 
 	 * @param id the word to search for 
-	 * @return the  Word object if id matches, null otherwise
+	 * @return the  Node object if id matches, null otherwise
 	 */
-	Word search(String word) {
-		Word current = head;
+	Node search(String word) {
+		Node current = head;
 		while (current != null) {
 			if (current.getWord().compareTo(word) == 0 )
 				return current;
@@ -164,15 +189,15 @@ public class WordLinkedList {
 	/**
 	 * Removes the element at the end of the list
 	 * 
-	 * @return the Word object removed
+	 * @return the Node object removed
 	 */
-	Word removeEndElement() {
+	Node removeEndElement() {
 
 		if (isEmpty())
 			return null;
 
-		Word current = head;
-		Word previous = null;
+		Node current = head;
+		Node previous = null;
 
 		// get last node and one before last
 		while (current.getNext() != null) {
@@ -192,32 +217,32 @@ public class WordLinkedList {
 	/**
 	 * Removes the element at the beginning of the list
 	 * 
-	 * @return the Word object removed
+	 * @return the Node object removed
 	 */
-	Word removeFirstElement() {
+	Node removeFirstElement() {
 
 		if (isEmpty())
 			return null;
 
-		Word current = head;
+		Node current = head;
 		head = head.getNext();
 		return current;
 	}
 
 	/**
-	 * Removes an element with the matching  Word
+	 * Removes an element with the matching  Node
 	 * 
 	 * @param word the word to be removed
-	 * @return the  Word object removed
+	 * @return the  Node object removed
 	 */
-	Word removeElement(String word) {
+	Node removeElement(String word) {
 
 		// check if linked list is empty
 		if (isEmpty())
 			return null;
 
-		Word current = head;
-		Word previous = null;
+		Node current = head;
+		Node previous = null;
 
 		while (current != null && current.getWord().compareTo(word) != 0) {
 
@@ -258,11 +283,11 @@ public class WordLinkedList {
 //		// another method (for reference only)
 //		boolean swapped = false;
 //
-//		Word lastChecked = head;
+//		Node lastChecked = head;
 //		do {
-//			Word previous = null;
-//			Word current = head;
-//			Word next = current.getNext();
+//			Node previous = null;
+//			Node current = head;
+//			Node next = current.getNext();
 //			swapped = false;
 //
 //			while (next != null && next != lastChecked) {
@@ -287,7 +312,7 @@ public class WordLinkedList {
 //	 * @param next     the next current Student to be swapped with
 //	 * @param previous the previous Student node
 //	 */
-//	private void swap(Word current, Word next, Word previous) {
+//	private void swap(Node current, Node next, Node previous) {
 //
 //		if (previous != null) {
 //			previous.setNext(next);
@@ -295,7 +320,7 @@ public class WordLinkedList {
 //			head = next;
 //		}
 //
-//		Word temp = next.getNext();
+//		Node temp = next.getNext();
 //		next.setNext(current);
 //		current.setNext(temp);
 //	}
@@ -315,7 +340,7 @@ public class WordLinkedList {
 	 * @return the total number of nodes
 	 */
 	private int getNumberOfNodes() {
-		Word cursor = head;
+		Node cursor = head;
 		int count = 0;
 		while (cursor != null) {
 			cursor = cursor.getNext();
