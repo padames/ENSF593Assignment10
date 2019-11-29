@@ -3,6 +3,8 @@ package anagram;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,11 +54,12 @@ public class AnagramApp {
 //		}
 //		
 //	    // TODO: Fix quick sort 
-//		quickSort(arrayOfWordsLinkedList);
+//		QuickSort.sort(arrayOfWordsLinkedList);
 //		long timeElapsed = System.nanoTime() - statTime;
 
 
 		// TODO: Write linked list to a file
+        //saveResultsToFile(arrayOfWordsLinkedList, outputfile);
 		
 		// TODO: print time to screen
 		
@@ -80,7 +83,12 @@ public class AnagramApp {
 	    }
 	    
 	    //TODO: Get quicksort to work
-	    quickSort(arrayOfWordsLinkedList);
+	    QuickSort.sort(arrayOfWordsLinkedList);
+	    
+	    System.out.println("\n");
+	    for(AnagramList list : arrayOfWordsLinkedList) {
+	    	list.printListInOneLine();
+	    }
 	}
 	
 	/**
@@ -164,74 +172,17 @@ public class AnagramApp {
 
 	}
     
-    
-
-	/**
-	 * Implementation of quick sort for an array of anagram lists.
-	 * <p>
-	 * <b>Note: </b> this is the public method called by users
-	 * @param arr a java <code>array</code> of anagram lists
+    /**
+	 * precondition: filename exists and list has been sorted
+	 * saves sorted array of linked list to text file one value per line
 	 */
-	public static void quickSort(AnagramList[] arr) {
-		if (arr.length < 2)
-			return;
-		
-		int max = 0;
-		// find the largest element and put it at the end of the array
-		for (int i = 0; i < arr.length; i++)
-			if (arr[max].getHead().getWord().compareTo(arr[i].getHead().getWord()) < 0)
-				max = i;
-
-		swap(arr, arr.length - 1, max); // largest element is now in its final position
-		quickSort(arr, 0, arr.length - 2);
-	}
-
-	/**
-	 * Private method that implements the quick sort algoritm over an array list
-	 * of anagram lists.
-	 * 
-	 * @param arr the array of lists
-	 * @param first the index where the array data starts
-	 * @param last the index where the array data ends
-	 */
-	private static void quickSort(AnagramList[] arr, int first, int last) {
-		int lower = first + 1, upper = last;
-		swap(arr, first, (first + last) / 2);
-		String bound = arr[first].getHead().getWord();
-		while (lower <= upper) {
-			while (bound.compareTo(arr[lower].getHead().getWord()) < 0) {
-				lower++;
-			}
-
-			while (bound.compareTo(arr[upper].getHead().getWord()) > 0) {
-				upper--;
-			}
-
-			if (lower < upper)
-				swap(arr, lower++, upper--);
-			else
-				lower++;
+	private static void saveResultsToFile(AnagramList[] arr, String outputfile) throws IOException {
+		FileWriter writer = new FileWriter(outputfile);
+		for (int i = 0; i < arr.length; i++) {
+			writer.write(arr[i] + "\n");
 		}
+		writer.close();
 
-		swap(arr, upper, first);
-
-		if (first < upper - 1)
-			quickSort(arr, first, upper - 1);
-		if (upper + 1 < last)
-			quickSort(arr, upper + 1, last);
-	}
-
-	
-	/**
-	 * Interchanges i place the values stored in the array at arra indexes left and right
-	 * @param arr the java array of anagram lists
-	 * @param left index into the array
-	 * @param right index into the array
-	 */
-	private static void swap(AnagramList arr[], int left, int right) {
-		AnagramList temp = arr[left]; // original left value is set aside 
-		arr[left] = arr[right]; // new left value becomes old right
-		arr[right] = temp; // new right value becomes old left
 	}
 
 }

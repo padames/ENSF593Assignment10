@@ -125,54 +125,33 @@ public class AnagramList {
 	 * @param newNode the Node's object to be inserted
 	 */
 	void InsertInOrder(Node newNode) {
-		 if (isEmpty())
-			 head = newNode;
 
-		 if (head.getNext() == null) {
-			 // single-element list found (head=tail)
-			 if (head.isLessThan(newNode)) {
-				 // new node becomes tail
-				 head.setNext(newNode);
-				 newNode.setNext(null);			 
-			 }
-			 else {
-				 // new node becomes new head
-				 var temp = head;
-				 head = newNode;
-				 newNode.setNext(temp);
-			 }
-		 }
-		 
-		 Node current = head;
-		 
-		 while (current != null) {
-			 if (current.getNext() != null) {
-				 // current node is not the tail
-				 if (current.isLessThan(newNode) 
-						 && current.getNext().isEqualOrGreatherThan(newNode)) {
-					 // insert between current and next
-					 Node temp = current.getNext();
-					 current.setNext(newNode);
-					 newNode.setNext(temp);
-					 break;
-				 }				 
-			 }
-			 else { //current is the tail
-				 if (current.isLessThan(newNode)) {
-					 // insert before tail
-					 Node temp = current.getNext();
-					 current.setNext(newNode);
-					 newNode.setNext(temp);
-					 break;
-				 }				 
-				 else { // new node becomes new tail
-					 current.setNext(newNode);
-					 newNode.setNext(null);
-				 }
-			 }
-			 current = current.getNext();
-		 }
+		Node current = head;
+		Node previous = null;
+
+		while (current != null && newNode.isEqualOrGreatherThan(current)) {
+
+			// TODO: do I need to exclude duplicate nodes
+//			if (newNode.isEqual(current))
+//				return;
+			previous = current;
+			current = current.getNext();
+		}
+
+		// previous is the predecessor node
+		// if previous null, then linked list is empty/
+		// so set head to the new node, otherwise set
+		// previous to point to the new node
+		if (previous == null)
+			head = newNode;
+		else
+			previous.setNext(newNode);
+
+		// set the new node to point to current node
+		newNode.setNext(current);
+
 	}
+
 	
 	/**
 	 * Returns a Node object if the id matches a  Node in the list
@@ -275,60 +254,6 @@ public class AnagramList {
 		return (head == null);
 	}
 
-//	/**
-//	 * Sorts the list using bubble sort algorithm
-//	 */
-//	public void sort() {
-//
-//		// check if linked list is empty
-//		if (isEmpty())
-//			return;
-//
-//		// another method (for reference only)
-//		boolean swapped = false;
-//
-//		Node lastChecked = head;
-//		do {
-//			Node previous = null;
-//			Node current = head;
-//			Node next = current.getNext();
-//			swapped = false;
-//
-//			while (next != null && next != lastChecked) {
-//				if (current.getId() > next.getId()) {
-//					swap(current, next, previous);
-//					current = next;
-//					swapped = true;
-//				}
-//				previous = current;
-//				current = previous.getNext();
-//				next = current.getNext();
-//			}
-//
-//			lastChecked = current;
-//		} while (swapped);
-//	}
-
-//	/**
-//	 * Swaps the content (i.e. data) of two Student nodes (current and next)
-//	 * 
-//	 * @param current  the current Student node to be swapped
-//	 * @param next     the next current Student to be swapped with
-//	 * @param previous the previous Student node
-//	 */
-//	private void swap(Node current, Node next, Node previous) {
-//
-//		if (previous != null) {
-//			previous.setNext(next);
-//		} else {
-//			head = next;
-//		}
-//
-//		Node temp = next.getNext();
-//		next.setNext(current);
-//		current.setNext(temp);
-//	}
-
 	/**
 	 * Returns the size or the number of elements present in the LinkedList
 	 * 
@@ -352,6 +277,22 @@ public class AnagramList {
 		}
 		return count;
 
+	}
+    
+    /**
+	 * Returns a string suitable for printing the contents of the list
+	 */
+	@Override
+	public String toString() {
+		String str = "";
+		Node cursor = head;
+		while (cursor != null) {
+			System.out.print(cursor + " ");
+			str += cursor + " ";
+			cursor = cursor.getNext();
+		}		
+		return str;
+		
 	}
 
 }
