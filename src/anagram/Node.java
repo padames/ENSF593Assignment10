@@ -1,4 +1,4 @@
-package anagram; 
+ 
   
 /** 
  * This is the node used to create linked list

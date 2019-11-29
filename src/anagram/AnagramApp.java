@@ -1,4 +1,4 @@
-package anagram;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,80 +15,84 @@ public class AnagramApp {
 
 	public static void main(String[] args) {
 
-//		// check number of arguments
-//		if (args.length != 2) {
-//			printUsage();
-//			System.exit(1);
-//		}
-//
-//		// parse arguments
-//		String inputfile = args[0];
-//		String outputfile = args[1];
-//		
-//		AnagramList arrayOfWordsLinkedList[] = null;
-//		
-//		long statTime = System.nanoTime();		
-//		// read string from file
-//		Path pathToFile = Paths.get(inputfile);
-//		try (BufferedReader br = Files.newBufferedReader(pathToFile, StandardCharsets.US_ASCII)) {
-//
-//			// read the first line from the text file
-//			String line = br.readLine();
-//
-//			// loop until all lines are read
-//			while (line != null) {
-//
-		        // TODO; Check with TAs 
-//				String word = line.trim().toLowerCase();
-//
-//				arrayOfWordsLinkedList = addWord(arrayOfWordsLinkedList, word);
-//
-//				// read next line
-//				line = br.readLine();
-//			}
-//
-//		} catch (Exception e) {
-//			System.err.println("Could not read file " + outputfile);
-//			System.exit(3);
-//
-//		}
-//		
-//	    // TODO: Fix quick sort 
-//		QuickSort.sort(arrayOfWordsLinkedList);
-//		long timeElapsed = System.nanoTime() - statTime;
+		// check number of arguments
+		if (args.length != 2) {
+			printUsage();
+			System.exit(1);
+		}
 
-
-		// TODO: Write linked list to a file
-        //saveResultsToFile(arrayOfWordsLinkedList, outputfile);
-		
-		// TODO: print time to screen
+		// parse arguments
+		String inputfile = args[0];
+		String outputfile = args[1];
 		
 		AnagramList arrayOfWordsLinkedList[] = null;
 		
-	    String words[] = {"car",
-	    		"dog",
-	    		"bed",
-	    		"stop",
-	    		"god",
-	    		"pots",
-	    		"arc",
-	    		"tops"};
+		long statTime = System.nanoTime();		
+		// read string from file
+		Path pathToFile = Paths.get(inputfile);
+		try (BufferedReader br = Files.newBufferedReader(pathToFile, StandardCharsets.US_ASCII)) {
+
+			// read the first line from the text file
+			String line = br.readLine();
+
+			// loop until all lines are read
+			while (line != null) {
+
+				String word = line.trim().toLowerCase();
+
+				arrayOfWordsLinkedList = insert(arrayOfWordsLinkedList, word);
+
+				// read next line
+				line = br.readLine();
+			}
+
+		} catch (Exception e) {
+			System.err.println("Could not read file " + outputfile);
+			System.exit(3);
+
+		}
+		
 	    
-	    for(String word : words) {
-	    	arrayOfWordsLinkedList = insert(arrayOfWordsLinkedList, word);
-	    }
-	    
-	    for(AnagramList list : arrayOfWordsLinkedList) {
-	    	list.printListInOneLine();
-	    }
-	    
-	    //TODO: Get quicksort to work
-	    QuickSort.sort(arrayOfWordsLinkedList);
-	    
-	    System.out.println("\n");
-	    for(AnagramList list : arrayOfWordsLinkedList) {
-	    	list.printListInOneLine();
-	    }
+		QuickSort.sort(arrayOfWordsLinkedList);
+		long timeElapsed = System.nanoTime() - statTime;
+		
+		System.out.println("Time: "+ timeElapsed/1.0E9 + "sec");
+		
+        try {
+			saveResultsToFile(arrayOfWordsLinkedList, outputfile);
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+			System.exit(2);
+		}
+		
+		
+        
+//		AnagramList arrayOfWordsLinkedList[] = null;
+//		
+//	    String words[] = {"car",
+//	    		"dog",
+//	    		"bed",
+//	    		"stop",
+//	    		"god",
+//	    		"pots",
+//	    		"arc",
+//	    		"tops"};
+//	    
+//	    for(String word : words) {
+//	    	arrayOfWordsLinkedList = insert(arrayOfWordsLinkedList, word);
+//	    }
+//	    
+//	    for(AnagramList list : arrayOfWordsLinkedList) {
+//	    	list.printListInOneLine();
+//	    }
+//	    
+//	    //TODO: Get quicksort to work
+//	    QuickSort.sort(arrayOfWordsLinkedList);
+//	    
+//	    System.out.println("\n");
+//	    for(AnagramList list : arrayOfWordsLinkedList) {
+//	    	list.printListInOneLine();
+//	    }
 	}
 	
 	/**

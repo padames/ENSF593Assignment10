@@ -1,4 +1,4 @@
-package anagram;
+
 
 public class AnagramList {
 
@@ -287,12 +287,10 @@ public class AnagramList {
 		String str = "";
 		Node cursor = head;
 		while (cursor != null) {
-			System.out.print(cursor + " ");
 			str += cursor + " ";
 			cursor = cursor.getNext();
 		}		
 		return str;
-		
 	}
 
 }
